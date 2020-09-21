@@ -1,0 +1,38 @@
+---
+- name: installation of tomcat9
+  hosts: test
+  become: yes
+  tasks:
+    - name: install tomcat9
+      apt:
+        name: tomcat9
+        state: present
+        update_cache: yes
+    - name: modify tomcat-user.xml
+      copy:
+        src: ./tomcat-users.xml
+        dest: /etc/tomcat9/
+    - name: web view
+      copy:
+        content: "hello there"
+        dest: /var/www/html/index.html
+    - name: restart tomcat9
+      service:
+        name: tomcat9
+        state: restarted
+    - name: firewall enabled
+      firewalld:
+        port: 8080/tcp
+        permanent: yes
+        immediate: yes
+        zone: default
+        state: enabled
+    - name: check url connenction for node-1
+      uri:
+        url: http://172.31.33.82:8080
+        status_code: 200
+    - name: check url connenction for node-2
+      uri:
+        url: http://172.31.34.12:8080
+        status_code: 200
+...
