@@ -1,0 +1,50 @@
+---
+- name: installation of {{app}}
+  hosts: test
+  become: yes
+  vars:
+    - app: tomcat9
+    - state: present
+    - c: yes
+    - portt: 8080
+  tasks:
+    - name: install {{app}}
+      apt:
+        name: "{{app}}"
+        state: "{{state}}"
+        update_cache: "{{c}}"
+    - name: modify tomcat-user.xml
+      copy:
+        src: ./tomcat-users.xml
+        dest: /etc/tomcat9/
+    - name: install firewalld
+      apt:
+        name: firewalld
+        state: "{{state}}"
+ - name: firewall enabled
+      firewalld:
+        port:  '{{portt}}/tcp'
+        permanent: "{{c}}"
+        immediate: "{{c}}"
+        state: enabled
+    - name: web view
+      copy:
+        content: "hello there"
+        dest: /var/lib/tomcat9/webapps/ROOT/index.html
+    - name: restart tomcat9
+      service:
+        name: "{{app}}"
+        state: restarted
+    - name: pause
+      pause:
+        minutes: 3
+    - name: check url connenction for node-1
+      uri:
+        url: http://172.31.33.82:8080
+        status_code: 200
+    - name: check url connenction for node-2
+      uri:
+        url: http://172.31.34.12:8080
+        status_code: 200
+...
+
