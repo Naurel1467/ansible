@@ -5,4 +5,4 @@
 ...
 
 #this is the variables documents associated with firewall_install.txt
-#this firle must be at the playbook level in file path.
+#this firle must be at the playbook level in file path
