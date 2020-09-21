@@ -1,0 +1,16 @@
+---
+- name: installation of multiple s/w applications.
+  hosts: all
+  tasks:
+    - name: installation begins
+      apt:   #module
+        name: "{{item}}"   #"{{item}}" is a specific for providing loops and to give the value to it we use"with_items".
+        state: present
+        update_cache: yes
+      with_items:
+        - tree  #app1
+        - git    #app2
+        - maven   #app3
+#loops can only effect on specific module
+...
+      
