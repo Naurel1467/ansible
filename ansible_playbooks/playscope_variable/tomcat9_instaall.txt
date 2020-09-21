@@ -1,5 +1,5 @@
 ---
-- name: installation of {{app}}
+- name: installation of {{app}}   #app is a playscope variable
   hosts: test
   become: yes
   vars:
@@ -21,7 +21,7 @@
       apt:
         name: firewalld
         state: "{{state}}"
- - name: firewall enabled
+    - name: firewall enabled
       firewalld:
         port:  '{{portt}}/tcp'
         permanent: "{{c}}"
