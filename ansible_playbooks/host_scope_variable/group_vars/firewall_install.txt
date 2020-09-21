@@ -1,0 +1,12 @@
+---
+- name: installation if firewalld
+  hosts: all
+  tasks:
+    - name: install firewall
+      apt:
+        name: "{{a}}"
+        status: "{{b}}"
+        update_cache: "{{c}}"
+...        
+
+#here 
