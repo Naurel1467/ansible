@@ -1,0 +1,13 @@
+#global_var1.txt
+---
+- name: "{{b}} {{a}}"
+  hosts: test
+  tasks:
+    - name: "{{b}} {{a}} application"
+      apt:
+        name: "{{a}}"
+        state: "{{b}}"
+        update_cache: "{{c}}"
+...
+
+#ansible-playbook global_var1 -e "a=git b=present c=yes" -b 
