@@ -1,6 +1,6 @@
 ---
 - name: installation if firewalld
-  hosts: all
+  hosts: webservers
   tasks:
     - name: install firewall
       apt:
@@ -9,4 +9,4 @@
         update_cache: "{{c}}"
 ...        
 
-#here 
+#here the variable 'a,b,c' values will be taken firm 'group_vars-->(group name)' automatically that values will be asigned above.
