@@ -1,0 +1,25 @@
+#create a users with home directory and copy files to their respective home directories.
+
+---
+- name: creating users and copying files
+  hosts: all
+  become: yes        #sudo
+  become_user: root  #run below commands as a root user
+  tasks:
+    - name: Creating users
+      user:                   #module
+        name: "{{item.a}}"
+        uid: "{{item.b}}"
+        home: "{{item.c}}"
+      with_items: 
+        - {a: Ravi,b: 1023,c: /home/Ravi}
+        - {a: Adda,b: 1043,c: /home/Adda}
+    - name: Copying files to the home directories
+      copy:                    #module
+        src: "{{item.d}}"
+        dest: "{{item.e}}"
+      with_items:
+        - {d: /etc/passwd,e: /home/Ravi}
+        - {d: /etc/group,e: /home/Adda}
+
+...        
