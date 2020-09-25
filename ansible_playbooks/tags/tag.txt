@@ -1,0 +1,66 @@
+These are like aliaces to modules in ansible playbooks
+Using tags we can get a better control on the flow of the playbook execution
+Rather than running the entire playbook  again and again with the same results we can select whcih part should execute.
+
+now,
+tom execute the tag1.yml file we can 
+
+--> ansible-playbook tag1.yml -b 
+above command will execute all the modules in the task
+
+but, if ur requirement is to run a specific module then,
+-->ansible-playbook tag1.yml --tags=tagged -b
+
+ubuntu@controller:~/playbooks$ ansible-playbook tag.yml --tags=tagged -b
+
+PLAY [creating tags and implementing] ***********************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [172.31.37.91]
+ok: [172.31.16.215]
+
+TASK [install tree] *****************************************************************************************************************************************
+ok: [172.31.16.215]
+ok: [172.31.37.91]
+
+TASK [create user] ******************************************************************************************************************************************
+ok: [172.31.16.215]
+ok: [172.31.37.91]
+
+PLAY RECAP **************************************************************************************************************************************************
+172.31.16.215              : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+172.31.37.91               : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+
+To execute only the untagged modules
+-->ansible-playbook tag1.yml --tags=untagged -b
+
+ubuntu@controller:~/playbooks$ ansible-playbook tag.yml --tags=untagged -b
+
+PLAY [creating tags and implementing] ***********************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [172.31.16.215]
+ok: [172.31.37.91]
+
+TASK [copy files] *******************************************************************************************************************************************
+ok: [172.31.37.91]
+ok: [172.31.16.215]
+
+PLAY RECAP **************************************************************************************************************************************************
+172.31.16.215              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+172.31.37.91               : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+
+To execute only a specific tagged modules,we have to provide the tag name in the command
+--> ansible-playbook tag1.yml --tags=tree-installation -b
+
+PLAY [creating tags and implementing] ***********************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [172.31.16.215]
+ok: [172.31.37.91]
+
+PLAY RECAP **************************************************************************************************************************************************
+172.31.16.215              : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+172.31.37.91               : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
