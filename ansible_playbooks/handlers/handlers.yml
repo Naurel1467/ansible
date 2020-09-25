@@ -1,0 +1,47 @@
+---
+- name: installation of jenkins
+  hosts: jenkins
+  tasks:
+    - name: installation of required dependencies for jenkins
+      apt:       #module
+        name: "{{item.a}}"
+        state: present
+        update_cache: "{{item.b}}"
+      with_items:
+        - {a: openjdk-8-jdk,b: yes}
+        - {a: git,b: no}
+        - {a: maven,b: no}
+    - name: downloading jenkins.war file
+      get_url:              #module which downloads the file from url;
+        url: http://get.jenkins.io/war-stable/2.249.1/jenkins.war
+        dest: /tmp
+      - stat:
+        path: /tmp/jenkins.war
+        register: jenkins
+      - debug: 
+        var: jenkins
+        msg: "jenkins has been downloaded"
+      when: jenkins.stat.exists == True
+    tags: jenkins_download           #tagged
+- name: installation of tomcat8 and tomcat8-admin
+  hosts: servers
+  tasks:
+    - name: configuration of {{item.a}} in servers group
+      apt:
+        name: "{{item.a}}"
+        state: present
+        update_cache: "{{item.b}}"
+      with_items:
+        - {a: tomcat8,b: yes}
+        - {a: tomcat8-admin,b: no}
+    - name: copy of tomcat-users.xml file
+      copy:                 #module
+        src: tomcat-users.xml
+        dest: /etc/tomcat8
+      notify: restarting tomcat8              #motify to handler section
+handlers:                                     #handler   
+    - name: restarting tomcat8
+      service:             #module same as "service tomcat8 restart"
+        name: tomcat8
+        state: restarted
+...

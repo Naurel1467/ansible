@@ -1,0 +1,29 @@
+---
+- name: implementing handlers
+  hosts: all
+  become: True
+  root_user: True
+  tasks:
+    - name: install apache2
+      apt:
+        name: apache2
+        state: present
+      notify: check url status
+    - name: copy indec.html
+      copy:
+        content: "helllo"
+        dest: /var/www/html/index.html
+      notify: restart apache2
+  handlers:  
+    - name: restart apche2
+      service:
+        name: apache2
+        state: restarted
+        enabled: True
+    - name: check url status
+      uri:
+        url: "{{item}}" 
+        status_code: 200
+      with_items:
+        - httpd://172.31.16.215
+        - httpd://172.31.42.21
