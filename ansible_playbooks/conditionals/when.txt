@@ -1,0 +1,38 @@
+==========================
+"when" conditions
+=========================
+This is used to execute a playbook based on a specific condition
+
+vim playbook16.yml
+---
+- name: Implementing when conditions
+  hosts: all
+  vars:
+   - a: 10     #if this condition meets then only the module will be executed
+  tasks:
+   - name: Create a file
+     file:
+      name: /home/ubuntu/file12
+      state: touch
+     when: a == 20      #condition
+...
+
+ubuntu@controller:~/playbooks$ ansible-playbook cond.yml -b
+
+PLAY [Implementing when conditions] *************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [172.31.16.215]
+ok: [172.31.37.91]
+
+TASK [Create a file] ****************************************************************************************************************************************
+skipping: [172.31.37.91]        #skipping since the condition is not met 
+skipping: [172.31.16.215]       #skipping since the condition is not met 
+
+PLAY RECAP **************************************************************************************************************************************************
+172.31.16.215              : ok=1    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+172.31.37.91               : ok=1    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+..............................................................................................................................................................
+..............................................................................................................................................................
+
+

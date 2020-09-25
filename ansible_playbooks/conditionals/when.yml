@@ -1,0 +1,17 @@
+---
+- name: check if a directory called "raviteja" is present if not then create a file named raviteja
+  hosts: all
+  tasks:
+    - name: capture the infor about the file "raviteja"
+      stat:
+        path: /home/ubuntu/raviteja
+      register: file_info
+    - name: display the output
+      debug:
+        var: file_info
+    - name: crate a file raviteja 
+      file:
+        name: /home/ubuntu/raviteja
+        state: touch
+      when: 
+        file_info.stat.exists==false    
